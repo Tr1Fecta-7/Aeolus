@@ -7,31 +7,22 @@
 // Hook UITableView
 %hook UITableView
 
--(void)setSeparatorStyle:(long long)arg1
-{   
-    // Return 0
-	%orig(0);
+- (void)setSeparatorStyle:(UITableViewCellSeparatorStyle)style {   
+    // Override the separator style to always be UITableViewCellSeparatorStyleNone. 
+    %orig(UITableViewCellSeparatorStyleNone);
 }
 
 %end
 
 %ctor {
-
     /* 
      * Credits to Nepeta for process exclusion code
      * I do this because on some devices, there is a crash when you use 3D touch on a notification with this tweak installed.
     */
 
-    // Creates Blacklist array to stop crashes
-    NSArray *blacklist = @[
-        @"SpringBoard",
-    ];
-
     // Check process and if process is on blacklist, return and don't run the tweak
     NSString *processName = [NSProcessInfo processInfo].processName;
-    for (NSString *process in blacklist) {
-        if ([process isEqualToString:processName]) {
-            return;
-        }
-    }
+    if ([processName isEqualToString:@"SpringBoard"]) {
+    	return;
+    } 
 }
